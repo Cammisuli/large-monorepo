@@ -17,22 +17,34 @@ ordinary. And, the bigger the repo, the bigger the difference in performance bet
 The repo has Nx, Turbo, and Lage enabled. They don't affect each other. You can remove one without affecting the
 other one.
 
-## Benchmark & Results (May 1)
+## Benchmark & Results (Sept 25)
 
 `npm run benchmark` runs the benchmark. The following numbers produced by an M1Max MBP on macOS 13 (Ventura). On a Windows machine all the tools will get slower, and the delta between Nx and Turbo/Lage will get bigger.
 
-- **average turbo time is: 633.1**
-- **average lage time is: 395.7**
-- **average nx time is: 153.0**
-- **nx is 2.58x faster than lage**
-- **nx is 4.13x faster than turbo**
+- **average turbo time is: 1400**
+- **average lage time is: 1343.4**
+- **average nx time is: 231.3**
+- **nx is 5.8x faster than lage**
+- **nx is 6x faster than turbo**
+-
+
+### No daemon
+
+Another performance mark that we're going to start tracking is commands run without their respective daemon. This would represent running the tools in an CI environment.
+These can be run with `npm run benchmark-no-daemon`
+
+- **average turbo time is: 1374.5**
+- **average lage time is: 1200.2**
+- **average nx time is: 1188**
+- **nx is 1.01x faster than lage**
+- **nx is 1.15x faster than turbo**
 
 ### Why is Nx faster than Turbo
 
 Nx uses several optimizations to minimize the amount of computation required. For instance, it stores information about
 the repository on disk to be able to recompute only what is needed. It runs a daemon process that gets all the necessary
 data structures ready before the developer invokes a command. And the data structures are updated incrementally, usually
-in just a few milliseconds. 
+in just a few milliseconds.
 
 Although Nx plugins use Node.js, the performance sensitive parts of Nx are written in Rust.
 
@@ -53,7 +65,7 @@ Run `nx build crew --skip-nx-cache` and `turbo run build --scope=crew --force`:
 
 ![terminal outputs](./readme-assets/turbo-nx-terminal.gif)
 
-Nx doesn't change your terminal output. Spinners, animations, colors are the same whether you use Nx or not. 
+Nx doesn't change your terminal output. Spinners, animations, colors are the same whether you use Nx or not.
 What is also important is that when you restore things from cache, Nx will
 replay the terminal output identical to the one you would have had you run the command.
 
